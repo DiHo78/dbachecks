@@ -88,6 +88,8 @@ $Tags = Get-CheckInformation -Check $Check -Group Instance -AllChecks $AllChecks
     }
 
     Describe "SQL Engine Service" -Tags SqlEngineServiceAccount, ServiceAccount, High, $filename {
+        $starttype = Get-DbcConfigValue policy.instance.sqlenginestart 
+        $state = Get-DbcConfigValue policy.instance.sqlenginestate
         if ($NotContactable -contains $psitem) {
             Context "Testing SQL Engine Service on $psitem" {
                 It "Can't Connect to $Psitem" {
@@ -100,17 +102,17 @@ $Tags = Get-CheckInformation -Check $Check -Group Instance -AllChecks $AllChecks
             Context "Testing SQL Engine Service on $psitem" {
                 if ( -not $IsLInux) {
                     @(Get-DbaService -ComputerName $psitem -Type Engine -ErrorAction SilentlyContinue).ForEach{
-                        It "SQL Engine service account should Be running on $($psitem.InstanceName)" {
-                            $psitem.State | Should -Be "Running" -Because 'If the service is not running, the SQL Server will not be accessible'
+                        It "SQL Engine service account should be $state on $($psitem.InstanceName)" {
+                            Assert-EngineState -AllInstanceInfo $AllInstanceInfo -state $state
                         }
                         if ($IsClustered) {
                             It "SQL Engine service account should have a start mode of Manual on FailOver Clustered Instance $($psitem.InstanceName)" {
-                                $psitem.StartMode | Should -Be "Manual" -Because 'Clustered Instances required that the SQL engine service is set to manual'
+                                Assert-EngineStartTypeCluster -AllInstanceInfo $AllInstanceInfo
                             }
                         }
                         else {
-                            It "SQL Engine service account should have a start mode of Automatic on standalone instance $($psitem.InstanceName)" {
-                                $psitem.StartMode | Should -Be "Automatic" -Because 'If the server restarts, the SQL Server will not be accessible'
+                            It "SQL Engine service account should have a start mode of $starttype on standalone instance $($psitem.InstanceName)" {
+                                Assert-EngineStartType -AllInstanceInfo $AllInstanceInfo -StartType $starttype
                             }
                         }
                     }
@@ -643,7 +645,6 @@ $Tags = Get-CheckInformation -Check $Check -Group Instance -AllChecks $AllChecks
     }
 
     Describe "Error Log Entries" -Tags ErrorLog, Medium, $filename {
-        $logWindow = Get-DbcConfigValue policy.errorlog.warningwindow
         if ($NotContactable -contains $psitem) {
             Context "Checking error log on $psitem" {
                 It "Can't Connect to $Psitem" {
@@ -770,9 +771,7 @@ $Tags = Get-CheckInformation -Check $Check -Group Instance -AllChecks $AllChecks
             }
         }
     }
-
     Describe "Cross Database Ownership Chaining" -Tags CrossDBOwnershipChaining, security, CIS, Medium, $filename {
-        $CrossDBOwnershipChaining = Get-DbcConfigValue policy.security.crossdbownershipchaining
         if ($NotContactable -contains $psitem) {
             Context "Testing Cross Database Ownership Chaining on $psitem" {
                 It "Can't Connect to $Psitem" {
@@ -782,8 +781,8 @@ $Tags = Get-CheckInformation -Check $Check -Group Instance -AllChecks $AllChecks
         }
         else {
             Context "Testing Cross Database Ownership Chaining on $psitem" {
-                It "Cross Database Ownership Chaining is set to $CrossDBOwnershipChaining on $psitem" {
-                    Assert-CrossDBOwnershipChaining -SQLInstance $Psitem -CrossDBOwnershipChaining $CrossDBOwnershipChaining
+                It "Cross Database Ownership Chaining should be disabled on $psitem" {
+                    Assert-CrossDBOwnershipChaining -AllInstanceInfo $AllInstanceInfo
                 }
             }
         }
@@ -857,7 +856,23 @@ $Tags = Get-CheckInformation -Check $Check -Group Instance -AllChecks $AllChecks
             }
         }
     }
-
+    Describe "OLE Automation Procedures Disabled" -Tags OLEAutomationProceduresDisabled, CIS, Low, $filename {
+        $skip = Get-DbcConfigValue skip.instance.oleautomationproceduresdisabled
+        if ($NotContactable -contains $psitem) {
+            Context "Checking OLE Automation Procedures on $psitem" {
+                It "Can't Connect to $Psitem" -Skip:$skip {
+                    $false	|  Should -BeTrue -Because "The instance should be available to be connected to!"
+                }
+            }
+        }
+        else {
+            Context "Checking OLE Automation Procedures on $psitem" {
+                It "The OLE Automation Procedures should be disabled on $psitem"  -Skip:$skip {
+                    Assert-OLEAutomationProcedures -AllInstanceInfo $AllInstanceInfo
+                }
+            }
+        }
+    }
     Describe "Remote Access Disabled" -Tags RemoteAccessDisabled, Security, CIS, Medium, $filename {
         $skip = Get-DbcConfigValue skip.instance.remoteaccessdisabled
         if ($NotContactable -contains $psitem) {
@@ -871,6 +886,24 @@ $Tags = Get-CheckInformation -Check $Check -Group Instance -AllChecks $AllChecks
             Context "Testing Remote Access on $psitem" {
                 It "The Remote Access should be disabled on $psitem" -Skip:$skip {
                     Assert-RemoteAccess -AllInstanceInfo $AllInstanceInfo 
+                }
+            }
+        }
+    }
+
+    Describe "Latest Build" -Tags LatestBuild, Security, CIS, Medium, $filename {
+        $skip = Get-DbcConfigValue skip.instance.latestbuild
+        if ($NotContactable -contains $psitem) {
+            Context "Testing Latest Build on $psitem" {
+                It "Can't Connect to $Psitem" -Skip:$skip {
+                    $false	|  Should -BeTrue -Because "The instance should be available to be connected to!"
+                }
+            }
+        }
+        else {
+            Context "Testing Latest Build on $psitem" {
+                It "The Latest Build of SQL should be installed on $psitem" -Skip:$skip {
+                    Assert-LatestBuild -AllInstanceInfo $AllInstanceInfo 
                 }
             }
         }

@@ -37,6 +37,11 @@ if($IsLinux){
 Set-PSFConfig -Module dbachecks -Name app.cluster -Value $null -Initialize -Description "One host name for each cluster for the HADR checks"
 
 # Policy Configs
+
+#instance
+Set-PSFConfig -Module dbachecks -Name policy.instance.sqlenginestart -Value 'Automatic' -Initialize -Description "The expected start type of the SQL Engine Service - Automatic, Manual, Disabled - Defaults to Automatic"
+Set-PSFConfig -Module dbachecks -Name policy.instance.sqlenginestate -Value 'Running' -Initialize -Description "The expected state of the SQL Engine Service - Running, Stopped - Defaults to Running"
+
 #Storage
 Set-PSFConfig -Module dbachecks -Name policy.storage.backuppath -Value $null -Initialize -Description "Enables tests to check if servers have access to centralized backup location"
 
@@ -50,12 +55,14 @@ Set-PSFConfig -Module dbachecks -Name policy.backup.logmaxminutes -Value 15 -Ini
 Set-PsFConfig -Module dbachecks -Name policy.backup.newdbgraceperiod -Value 0 -Initialize -Description "The number of hours a newly created database is allowed to not have backups"
 Set-PSFConfig -Module dbachecks -Name policy.backup.defaultbackupcompression -Validation bool -Value $true -Initialize -Description "Default Backup Compression should be enabled `$true or disabled `$false"
 Set-PSFConfig -Module dbachecks -Name policy.security.clrenabled -Validation bool -Value $false -Initialize -Description "CLR Enabled should be enabled `$true or disabled `$false"
-Set-PSFConfig -Module dbachecks -Name policy.security.crossdbownershipchaining -Validation bool -Value $false -Initialize -Description "Cross Database Ownership Chaining should be enabled `$true or disabled `$false"
+Set-PSFConfig -Module dbachecks -Name policy.security.crossdbownershipchaining -Validation bool -Value $false -Initialize -Description "Cross Database Ownership Chaining should be disabled `$false"
 Set-PSFConfig -Module dbachecks -Name policy.security.databasemailenabled -Validation bool -Value $false -Initialize -Description "Database Mail XPs should be enabled `$true or disabled `$false"
 Set-PSFConfig -Module dbachecks -Name policy.security.adhocdistributedqueriesenabled -Validation bool -Value $false -Initialize -Description "Ad Hoc Distributed Queries should be enabled `$true or disabled `$false"
 Set-PSFConfig -Module dbachecks -Name policy.security.xpcmdshelldisabled -Validation bool -Value $true -Initialize -Description "XP CmdShell should be disabled `$true or enabled `$false"
-Set-PSFConfig -Module dbachecks -Name policy.security.remoteaccessdisabled -Value 0 -Initialize -Description "Remote Access should be disabled 0 or enabled 1"
+Set-PSFConfig -Module dbachecks -Name policy.security.oleautomationproceduresdisabled -Validation bool -Value $true -Initialize -Description "OLE Automation Procedures should be disabled `$false"
+Set-PSFConfig -Module dbachecks -Name policy.security.remoteaccessdisabled -Value 0 -Initialize -Description "Remote Access should be disabled 0"
 Set-PSFConfig -Module dbachecks -Name policy.security.scanforstartupproceduresdisabled -Validation bool -Value $true -Initialize -Description "Scan For Startup Procedures disabled `$true or enabled `$false"
+Set-PSFConfig -Module dbachecks -Name policy.security.latestbuild -Validation bool -Value $true -Initialize -Description "SQL Server should have the latest SQL build (service packs/CUs) installed"
 
 #diskspce
 Set-PSFConfig -Module dbachecks -Name policy.diskspace.percentfree -Value 20 -Initialize -Description "Percent disk free"
@@ -226,8 +233,10 @@ Set-PSFConfig -Module dbachecks -Name skip.hadr.listener.pingcheck -Validation b
 Set-PSFConfig -Module dbachecks -Name skip.instance.defaulttrace -Validation bool -Value $false -Initialize -Description "Skip the default trace check"
 Set-PSFConfig -Module dbachecks -Name skip.agent.longrunningjobs -Validation bool -Value $false -Initialize -Description "Skip the long running agent jobs check"
 Set-PSFConfig -Module dbachecks -Name skip.agent.lastjobruntime -Validation bool -Value $false -Initialize -Description "Skip the last agent job time check"
-Set-PSFConfig -Module dbachecks -Name skip.instance.remoteaccessdisabled -Validation bool -Value $false -Initialize -Description "Skip the default trace check"
+Set-PSFConfig -Module dbachecks -Name skip.instance.oleautomationproceduresdisabled -Validation bool -Value $false -Initialize -Description "Skip OLE Automation Procedures check"
+Set-PSFConfig -Module dbachecks -Name skip.instance.remoteaccessdisabled -Validation bool -Value $false -Initialize -Description "Skip the remote access check"
 Set-PSFConfig -Module dbachecks -Name skip.instance.scanforstartupproceduresdisabled -Validation bool -Value $false -Initialize -Description "Skip the scan for startup procedures disabled check"
+Set-PSFConfig -Module dbachecks -Name skip.instance.latestbuild -Validation bool -Value $false -Initialize -Description "Skip the scan the latest build of SQL Server check"
 
 #agent
 Set-PSFConfig -Module dbachecks -Name agent.dbaoperatorname -Value $null -Initialize -Description "Name of the DBA Operator in SQL Agent"

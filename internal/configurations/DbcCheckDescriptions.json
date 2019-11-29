@@ -173,7 +173,7 @@
     },
     {
         "UniqueTag": "SqlEngineServiceAccount",
-        "Description": "Tests that the SQL Engine Service is started and set to auto-start"
+        "Description": "Tests that the SQL Engine Service state is set to the configured value (default - Running) and that the start mode is set to the configured value (default - Automatic) unless it is a cluster in which case it checks that the start mode is set to Manual"
     },
     {
         "UniqueTag": "SqlBrowserServiceAccount",
@@ -408,6 +408,10 @@
         "Description": "Tests that the XP CmdShell configuration setting is set as specified (default true - meaning it should be disabled)"
     },
     {
+        "UniqueTag": "OLEAutomationProceduresDisabled",
+        "Description": "Tests that the OLE Automation Procedures configuration setting is set as specified (default 0 - meaning it should be disabled)"
+    },
+    {
         "UniqueTag": "RemoteAccessDisabled",
         "Description": "Tests that the Remote Access configuration setting is set as specified (default true - meaning it should be disabled)"
     },
@@ -430,5 +434,9 @@
     {
         "UniqueTag": "LastJobRunTime",
         "Description": "Tests that the last duration of the agent jobs were not longer than the configured percentage (default 50) of time more than the average job run"
+    },
+    {
+        "UniqueTag": "LatestBuild",
+        "Description": "Tests that the sees is SQL Server has the newest Service Packs and CUs installed."
     }
  ]

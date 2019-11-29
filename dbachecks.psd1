@@ -11,7 +11,7 @@
     RootModule             = 'dbachecks.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '1.2.15'
+    ModuleVersion          = '1.2.21'
 
     # ID used to uniquely identify this module
     GUID                   = '578c5d98-50c8-43a8-bdbb-d7159028d7ac'
@@ -131,12 +131,12 @@
 
             # Release notes for this particular version of the module
             ReleaseNotes = "
-## Date 17th October
-Thank you Shane @SOZDBA
-    Improved Documentation
-Thank you Gareth NewMan
-    Added New Check - Default File Path
-
+## Date 28th November
+Thank you Tracey tboggiano
+    Added new CIS Check for the latest SQL build #716
+    
+Thank you Rob
+    Making the SQL Engine Service Check configurable #706
 ##Latest
 
 Run Get-DbcReleaseNotes for all release notes

@@ -98,11 +98,11 @@ function Get-AllInstanceInfo {
                     # so that it can be mocked
                     function Get-ErrorLogEntry {
                         # get the number of the first error log that was created after the logwindow config
-                        $OldestErrorLogNumber = ($InstanceSMO.EnumErrorLogs() | Where-Object {$psitem.CreateDate -gt (Get-Date).AddDays( - $LogWindow)} |Sort-Object ArchiveNo -Descending | Select-Object -First 1).ArchiveNo + 1
+                        $OldestErrorLogNumber = ($InstanceSMO.EnumErrorLogs() | Where-Object { $psitem.CreateDate -gt (Get-Date).AddDays( - $LogWindow) } | Sort-Object ArchiveNo -Descending | Select-Object -First 1).ArchiveNo + 1
                     
                         # Get the Error Log entries for each one
                         (0..$OldestErrorLogNumber).ForEach{
-                            $InstanceSMO.ReadErrorLog($psitem).Where{$_.Text -match "Severity: 1[7-9]|Severity: 2[0-4]"}
+                            $InstanceSMO.ReadErrorLog($psitem).Where{ $_.Text -match "Severity: 1[7-9]|Severity: 2[0-4]" }
                         }
                     }
                     # It is not enough to check the CreateDate on the log, you must check the LogDate on every error record as well.
@@ -111,7 +111,7 @@ function Get-AllInstanceInfo {
                             LogDate     = $psitem.LogDate
                             ProcessInfo = $Psitem.ProcessInfo
                             Text        = $Psitem.Text
-                        } | Where-Object {$psitem.LogDate -gt (Get-Date).AddDays( - $LogWindow)} 
+                        } | Where-Object { $psitem.LogDate -gt (Get-Date).AddDays( - $LogWindow) } 
                     }
                 }
                 catch {
@@ -145,15 +145,61 @@ function Get-AllInstanceInfo {
                 catch {
                     $There = $false
                     $DefaultTrace = [pscustomobject] @{
-                            ConfiguredValue = 'We Could not Connect to $Instance'
+                        ConfiguredValue = 'We Could not Connect to $Instance'
                     }
                 }
             }
             else {
                 $There = $false
                 $DefaultTrace = [pscustomobject] @{
+                    ConfiguredValue = 'We Could not Connect to $Instance'
+                }
+            }
+        }
+
+        'OleAutomationProceduresDisabled' {
+            if ($There) {
+                try {
+                    $SpConfig = Get-DbaSpConfigure -SqlInstance $Instance -ConfigName 'OleAutomationProceduresEnabled'
+                    $OleAutomationProceduresDisabled = [pscustomobject] @{
+                        ConfiguredValue = $SpConfig.ConfiguredValue
+                    }
+                }
+                catch {
+                    $There = $false
+                    $OleAutomationProceduresDisabled = [pscustomobject] @{
                         ConfiguredValue = 'We Could not Connect to $Instance'
                     }
+                }
+            }
+            else {
+                $There = $false
+                $OleAutomationProceduresDisabled = [pscustomobject] @{
+                    ConfiguredValue = 'We Could not Connect to $Instance'
+                }
+            }
+        }
+
+        'CrossDBOwnershipChaining' {
+            if ($There) {
+                try {
+                    $SpConfig = Get-DbaSpConfigure -SqlInstance $Instance -ConfigName 'CrossDBOwnershipChaining'
+                    $CrossDBOwnershipChaining = [pscustomobject] @{
+                        ConfiguredValue = $SpConfig.ConfiguredValue
+                    }
+                }
+                catch {
+                    $There = $false
+                    $CrossDBOwnershipChaining = [pscustomobject] @{
+                        ConfiguredValue = 'We Could not Connect to $Instance'
+                    }
+                }
+            }
+            else {
+                $There = $false
+                $CrossDBOwnershipChaining = [pscustomobject] @{
+                    ConfiguredValue = 'We Could not Connect to $Instance'
+                }
             }
         }
 
@@ -168,18 +214,17 @@ function Get-AllInstanceInfo {
                 catch {
                     $There = $false
                     $ScanForStartupProceduresDisabled = [pscustomobject] @{
-                            ConfiguredValue = 'We Could not Connect to $Instance'
+                        ConfiguredValue = 'We Could not Connect to $Instance'
                     }
                 }
             }
             else {
                 $There = $false
                 $ScanForStartupProceduresDisabled = [pscustomobject] @{
-                        ConfiguredValue = 'We Could not Connect to $Instance'
-                    }
+                    ConfiguredValue = 'We Could not Connect to $Instance'
+                }
             }
         }
-
         'MemoryDump' {
             if ($There) {
                 try {
@@ -192,7 +237,7 @@ function Get-AllInstanceInfo {
                 catch {
                     $There = $false
                     $MaxDump = [pscustomobject] @{
-                            Count = 'We Could not Connect to $Instance'
+                        Count = 'We Could not Connect to $Instance'
                     }
                 }
             }
@@ -200,7 +245,7 @@ function Get-AllInstanceInfo {
                 $There = $false
                 $MaxDump = [pscustomobject] @{
                     Count = 'We Could not Connect to $Instance'
-            }
+                }
             }
         }
 
@@ -215,25 +260,81 @@ function Get-AllInstanceInfo {
                 catch {
                     $There = $false
                     $RemoteAccessDisabled = [pscustomobject] @{
-                            ConfiguredValue = 'We Could not Connect to $Instance'
+                        ConfiguredValue = 'We Could not Connect to $Instance'
                     }
                 }
             }
             else {
                 $There = $false
                 $RemoteAccessDisabled = [pscustomobject] @{
-                        ConfiguredValue = 'We Could not Connect to $Instance'
-                    }
+                    ConfiguredValue = 'We Could not Connect to $Instance'
+                }
             }
         }
-        Default {}
+
+        'LatestBuild' {
+            if ($There) {
+                try {
+                    $results = Test-DbaBuild -SqlInstance $Instance -Latest
+                    $LatestBuild = [pscustomobject] @{
+                        Compliant = $results.Compliant
+                    }
+                }
+                catch {
+                    $There = $false
+                    $LatestBuild = [pscustomobject] @{
+                        Compliant = 'We Could not Connect to $Instance'
+                    }
+                }
+            }
+            else {
+                $There = $false
+                $LatestBuild = [pscustomobject] @{
+                    Compliant = 'We Could not Connect to $Instance'
+                }
+            }
+        }
+        'SqlEngineServiceAccount' {
+            if ($There) {
+                try {
+                    $ComputerName , $InstanceName = $Instance.Name.Split('\')
+                    if ($null -eq $InstanceName) {
+                        $InstanceName = 'MSSQLSERVER'
+                    }
+                    $SqlEngineService = Get-DbaService -ComputerName $ComputerName -InstanceName $instanceName -Type Engine -ErrorAction SilentlyContinue
+                    $EngineService = [pscustomobject] @{
+                        State     = $SqlEngineService.State 
+                        StartType = $SqlEngineService.StartMode
+                    }
+                }
+                catch {
+                    $There = $false
+                    $EngineService = [pscustomobject] @{
+                        State     = 'We Could not Connect to $Instance $ComputerName , $InstanceName from catch'
+                        StartType = 'We Could not Connect to $Instance $ComputerName , $InstanceName from catch'
+                    }
+                }
+            }
+            else {
+                $There = $false
+                $EngineService = [pscustomobject] @{
+                    State     = 'We Could not Connect to $Instance'
+                    StartType = 'We Could not Connect to $Instance'
+                }
+            }
+        }
+        Default { }
     }
     [PSCustomObject]@{
-        ErrorLog = $ErrorLog
-        DefaultTrace = $DefaultTrace
-        MaxDump = $MaxDump
-        RemoteAccessDisabled = $RemoteAccessDisabled
-        ScanForStartupProceduresDisabled = $ScanForStartupProceduresDisabled 
+        ErrorLog                         = $ErrorLog
+        DefaultTrace                     = $DefaultTrace
+        MaxDump                          = $MaxDump
+        CrossDBOwnershipChaining         = $CrossDBOwnershipChaining
+        ScanForStartupProceduresDisabled = $ScanForStartupProceduresDisabled
+        RemoteAccess                     = $RemoteAccessDisabled
+        OleAutomationProceduresDisabled  = $OleAutomationProceduresDisabled
+        LatestBuild                      = $LatestBuild
+        EngineService                    = $EngineService
     }
 }
 
@@ -241,19 +342,35 @@ function Assert-DefaultTrace {
     Param($AllInstanceInfo)
     $AllInstanceInfo.DefaultTrace.ConfiguredValue | Should -Be 1 -Because "We expected the Default Trace to be enabled"
 }
+function Assert-EngineState {
+    Param($AllInstanceInfo,$state)
+    $AllInstanceInfo.EngineService.State | Should -Be $state -Because "The SQL Service was expected to be $state"
+}
+function Assert-EngineStartType {
+    Param($AllInstanceInfo,$starttype)
+    $AllInstanceInfo.EngineService.StartType | Should -Be $starttype -Because "The SQL Service Start Type was expected to be $starttype"
+}
+function Assert-EngineStartTypeCluster {
+    Param($AllInstanceInfo)
+    $AllInstanceInfo.EngineService.StartType | Should -Be "Manual" -Because 'Clustered Instances required that the SQL engine service is set to manual'
+}
 
+function Assert-OleAutomationProcedures {
+    Param($AllInstanceInfo)
+    $AllInstanceInfo.OleAutomationProceduresDisabled.ConfiguredValue | Should -Be 0 -Because "We expect the OLE Automation Procedures to be disabled"
+}
 function Assert-ScanForStartupProcedures {
     param ($AllInstanceInfo)
     $AllInstanceInfo.ScanForStartupProceduresDisabled.ConfiguredValue | Should -Be 0 -Because "We expected the scan for startup procedures to be disabled"
 }
 function Assert-MaxDump {
-    Param($AllInstanceInfo,$maxdumps)
+    Param($AllInstanceInfo, $maxdumps)
     $AllInstanceInfo.MaxDump.Count | Should -BeLessThan $maxdumps -Because "We expected less than $maxdumps dumps but found $($AllInstanceInfo.MaxDump.Count). Memory dumps often suggest issues with the SQL Server instance"
 }
 
 function Assert-RemoteAccess {
     param ($AllInstanceInfo)
-    $AllInstanceInfo.RemoteAccessDisabled.ConfiguredValue | Should -Be 0 -Because "We expected Remote Access to be enabled"
+    $AllInstanceInfo.RemoteAccess.ConfiguredValue | Should -Be 0 -Because "We expected Remote Access to be disabled"
 }
 
 function Assert-InstanceMaxDop {
@@ -281,7 +398,7 @@ function Assert-BackupCompression {
 function Assert-TempDBSize {
     Param($Instance)
 
-    @((Get-DbaDbFile -SqlInstance $Instance -Database tempdb).Where{$_.Type -eq 0}.Size.Megabyte |Select-Object -Unique).Count | Should -Be 1 -Because "We want all the tempdb data files to be the same size - See https://blogs.sentryone.com/aaronbertrand/sql-server-2016-tempdb-fixes/ and https://www.brentozar.com/blitz/tempdb-data-files/ for more information"
+    @((Get-DbaDbFile -SqlInstance $Instance -Database tempdb).Where{ $_.Type -eq 0 }.Size.Megabyte | Select-Object -Unique).Count | Should -Be 1 -Because "We want all the tempdb data files to be the same size - See https://blogs.sentryone.com/aaronbertrand/sql-server-2016-tempdb-fixes/ and https://www.brentozar.com/blitz/tempdb-data-files/ for more information"
 }
 
 function Assert-InstanceSupportedBuild {
@@ -329,12 +446,11 @@ function Assert-TraceFlag {
         [int[]]$ExpectedTraceFlag
     )
     if ($null -eq $ExpectedTraceFlag) {
-        $a = (Get-DbaTraceFlag -SqlInstance $SQLInstance).TraceFlag
-        (Get-DbaTraceFlag -SqlInstance $SQLInstance).TraceFlag  | Should -BeNullOrEmpty -Because "We expect that there will be no Trace Flags set on $SQLInstance"
+        (Get-DbaTraceFlag -SqlInstance $SQLInstance).TraceFlag | Should -BeNullOrEmpty -Because "We expect that there will be no Trace Flags set on $SQLInstance"
     }
     else {
         @($ExpectedTraceFlag).ForEach{
-            (Get-DbaTraceFlag -SqlInstance $SQLInstance).TraceFlag  | Should -Contain $PSItem -Because "We expect that Trace Flag $PsItem will be set on $SQLInstance"
+            (Get-DbaTraceFlag -SqlInstance $SQLInstance).TraceFlag | Should -Contain $PSItem -Because "We expect that Trace Flag $PsItem will be set on $SQLInstance"
         }
     }
 }
@@ -345,11 +461,11 @@ function Assert-NotTraceFlag {
     )
 
     if ($null -eq $NotExpectedTraceFlag) {
-        (Get-DbaTraceFlag -SqlInstance $SQLInstance).TraceFlag  | Should -BeNullOrEmpty -Because "We expect that there will be no Trace Flags set on $SQLInstance"
+        (Get-DbaTraceFlag -SqlInstance $SQLInstance).TraceFlag | Should -BeNullOrEmpty -Because "We expect that there will be no Trace Flags set on $SQLInstance"
     }
     else {
         @($NotExpectedTraceFlag).ForEach{
-            (Get-DbaTraceFlag -SqlInstance $SQLInstance).TraceFlag  | Should -Not -Contain $PSItem -Because "We expect that Trace Flag $PsItem will not be set on $SQLInstance"
+            (Get-DbaTraceFlag -SqlInstance $SQLInstance).TraceFlag | Should -Not -Contain $PSItem -Because "We expect that Trace Flag $PsItem will not be set on $SQLInstance"
         }
     }
 }
@@ -362,13 +478,12 @@ function Assert-CLREnabled {
 
     (Get-DbaSpConfigure -SqlInstance $SQLInstance -Name IsSqlClrEnabled).ConfiguredValue -eq 1 | Should -Be $CLREnabled -Because 'The CLR Enabled should be set correctly'
 }
+
 function Assert-CrossDBOwnershipChaining {
-    param (
-        $SQLInstance,
-        $CrossDBOwnershipChaining
-    )
-    (Get-DbaSpConfigure -SqlInstance $SQLInstance -Name CrossDBOwnershipChaining).ConfiguredValue -eq 1 | Should -Be $CrossDBOwnershipChaining -Because 'The Cross Database Ownership Chaining setting should be set correctly'
+    Param($AllInstanceInfo)
+    $AllInstanceInfo.CrossDBOwnershipChaining.ConfiguredValue | Should -Be 0 -Because "We expected the Cross DB Ownership Chaining to be disabled"
 }
+
 function Assert-AdHocDistributedQueriesEnabled {
     param (
         $SQLInstance,
@@ -396,12 +511,16 @@ function Assert-ErrorLogEntry {
     $AllInstanceInfo.ErrorLog | Should -BeNullOrEmpty -Because "these severities indicate serious problems"
 }
 
+function Assert-LatestBuild {
+    Param($AllInstanceInfo)
+    $AllInstanceInfo.LatestBuild.Compliant | Should -Be $true -Because "We expected the SQL Server to be on the newest SQL Server Packs/CUs"
+}
 
 # SIG # Begin signature block
 # MIINEAYJKoZIhvcNAQcCoIINATCCDP0CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUncCtYi0k2a2nT5KzPa5J1DXf
-# eyagggpSMIIFGjCCBAKgAwIBAgIQAsF1KHTVwoQxhSrYoGRpyjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUUSq5eR44NExtCJltIXTiayOj
+# 3cCgggpSMIIFGjCCBAKgAwIBAgIQAsF1KHTVwoQxhSrYoGRpyjANBgkqhkiG9w0B
 # AQsFADByMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMTEwLwYDVQQDEyhEaWdpQ2VydCBTSEEyIEFz
 # c3VyZWQgSUQgQ29kZSBTaWduaW5nIENBMB4XDTE3MDUwOTAwMDAwMFoXDTIwMDUx
@@ -461,11 +580,11 @@ function Assert-ErrorLogEntry {
 # EyhEaWdpQ2VydCBTSEEyIEFzc3VyZWQgSUQgQ29kZSBTaWduaW5nIENBAhACwXUo
 # dNXChDGFKtigZGnKMAkGBSsOAwIaBQCgeDAYBgorBgEEAYI3AgEMMQowCKACgACh
 # AoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQBgjcCAQsxDjAM
-# BgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBQj7PN2tTpWBwr8+8QWASk0wtYp
-# WjANBgkqhkiG9w0BAQEFAASCAQBfsbQiu0GEMgNlw6NUt9PHAvTjmnflhcm0DbMN
-# QCMMs0aklDPOFaPD1Q7nEh0L8MWyldqA+sBMKJVfgpwOctPXfn5w9dOAzqQcYA9e
-# 4Ub8g6T+vWsTqtBb3ojpeRUarAo+HiMJbInlUay22PP4HnWsqLjsSjVhpZqCzDhh
-# /r8zA/xis4o5ZmwmsK5xaAqT3MkriYylf2Glhl13FBo9R1U9xxk+DWwa7XiDuwoT
-# RveVeSjNrXJRkOsMrs/vjFumfCp1YbesJojDbOITjPo8IGGgLqsbyxpF7KHAik1s
-# 8XWIc/re4Er01v8u5U4rxwI4oD9NKTWLk8/pkfGc9fnWYArO
+# BgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBSUzgQRTdWd2Gr/xQpcs+8v4iRz
+# YjANBgkqhkiG9w0BAQEFAASCAQAsrpN6w4z8xce6ddPsQUCJ1b/osoVcOGB4ViwD
+# 5nENd2vU4GBgqZcDHkDBKmMJJhfsM/EaLbAN34ib52GoJxt9+3wYTWtHf+cAi4Ip
+# chkVADcS3Npc1HssA+C2XZvQkuPd49kFruuxLsSqyx3CmDjR3l96Xw1W7sfzovvK
+# 6aXHmKDBja4m1+M9jRGTgY6sPAYZR+Hjvrt7AkQprQOPZzvMytVyr76FU8UZh3Ov
+# B9ZerFbJOao5fpYu5Smb3jDT0N3A7ZpA7mmYDM8UDMC/7v9DnuEFifrEqHC/mb8j
+# woxXBA8s0AdK3CAh1G6Q3jEsZ4s6AWdFZSl8fQOU6JphgB8e
 # SIG # End signature block
