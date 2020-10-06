@@ -24,8 +24,9 @@ Invoke-DbcCheck [-Script <Object[]>] [-TestName <String[]>] [-EnableExit] [[-Che
  [-ConfigAppLocalapp <Object>] [-ConfigAppMaildirectory <Object>] [-ConfigAppSqlcredential <Object>]
  [-ConfigAppSqlinstance <Object>] [-ConfigAppWincredential <Object>]
  [-ConfigCommandInvokedbccheckExcludecheck <Object>] [-ConfigCommandInvokedbccheckExcludedatabases <Object>]
- [-ConfigDatabaseExists <Object>] [-ConfigDomainDomaincontroller <Object>] [-ConfigDomainName <Object>]
- [-ConfigDomainOrganizationalunit <Object>] [-ConfigGlobalNotcontactable <Object>]
+ [-ConfigDatabaseExists <Object>] [-ConfigDatabaseQuerystoredisabledExcludedb <Object>]
+ [-ConfigDatabaseQuerystoreenabledExcludedb <Object>] [-ConfigDomainDomaincontroller <Object>]
+ [-ConfigDomainName <Object>] [-ConfigDomainOrganizationalunit <Object>] [-ConfigGlobalNotcontactable <Object>]
  [-ConfigMailFailurethreshhold <Object>] [-ConfigMailFrom <Object>] [-ConfigMailSmtpserver <Object>]
  [-ConfigMailSubject <Object>] [-ConfigMailTo <Object>] [-ConfigOlaJobNameCommandLogCleanup <Object>]
  [-ConfigOlaJobNameDeleteBackupHistory <Object>] [-ConfigOlaJobNameOutputFileCleanup <Object>]
@@ -56,20 +57,21 @@ Invoke-DbcCheck [-Script <Object[]>] [-TestName <String[]>] [-EnableExit] [[-Che
  [-ConfigPolicyDatabaseWrongcollation <Object>] [-ConfigPolicyDbccMaxdays <Object>]
  [-ConfigPolicyDiskspacePercentfree <Object>] [-ConfigPolicyDumpMaxcount <Object>]
  [-ConfigPolicyErrorlogLogcount <Object>] [-ConfigPolicyErrorlogWarningwindow <Object>]
- [-ConfigPolicyHadrTcpport <Object>] [-ConfigPolicyIdentityUsagepercent <Object>]
- [-ConfigPolicyInstanceSqlenginestart <Object>] [-ConfigPolicyInstanceSqlenginestate <Object>]
- [-ConfigPolicyInstancemaxdopExcludeinstance <Object>] [-ConfigPolicyInstancemaxdopMaxdop <Object>]
- [-ConfigPolicyInstancemaxdopUserecommended <Object>] [-ConfigPolicyInvaliddbownerExcludedb <Object>]
- [-ConfigPolicyInvaliddbownerName <Object>] [-ConfigPolicyNetworkLatencymaxms <Object>]
- [-ConfigPolicyOlaCommandLogCleanUp <Object>] [-ConfigPolicyOlaCommandLogenabled <Object>]
- [-ConfigPolicyOlaCommandLogscheduled <Object>] [-ConfigPolicyOlaDatabase <Object>]
- [-ConfigPolicyOlaDeleteBackupHistoryCleanUp <Object>] [-ConfigPolicyOlaDeleteBackupHistoryenabled <Object>]
- [-ConfigPolicyOlaDeleteBackupHistoryscheduled <Object>] [-ConfigPolicyOlaInstalled <Object>]
- [-ConfigPolicyOlaOutputFileCleanUp <Object>] [-ConfigPolicyOlaOutputFileCleanupenabled <Object>]
- [-ConfigPolicyOlaOutputFileCleanupscheduled <Object>] [-ConfigPolicyOlaPurgeJobHistoryCleanUp <Object>]
- [-ConfigPolicyOlaPurgeJobHistoryenabled <Object>] [-ConfigPolicyOlaPurgeJobHistoryscheduled <Object>]
- [-ConfigPolicyOlaSystemfullenabled <Object>] [-ConfigPolicyOlaSystemfullretention <Object>]
- [-ConfigPolicyOlaSystemfullscheduled <Object>] [-ConfigPolicyOlaSystemIntegrityCheckenabled <Object>]
+ [-ConfigPolicyHadrAgtcpport <Object>] [-ConfigPolicyHadrTcpport <Object>]
+ [-ConfigPolicyIdentityUsagepercent <Object>] [-ConfigPolicyInstanceSqlenginestart <Object>]
+ [-ConfigPolicyInstanceSqlenginestate <Object>] [-ConfigPolicyInstancemaxdopExcludeinstance <Object>]
+ [-ConfigPolicyInstancemaxdopMaxdop <Object>] [-ConfigPolicyInstancemaxdopUserecommended <Object>]
+ [-ConfigPolicyInvaliddbownerExcludedb <Object>] [-ConfigPolicyInvaliddbownerName <Object>]
+ [-ConfigPolicyNetworkLatencymaxms <Object>] [-ConfigPolicyOlaCommandLogCleanUp <Object>]
+ [-ConfigPolicyOlaCommandLogenabled <Object>] [-ConfigPolicyOlaCommandLogscheduled <Object>]
+ [-ConfigPolicyOlaDatabase <Object>] [-ConfigPolicyOlaDeleteBackupHistoryCleanUp <Object>]
+ [-ConfigPolicyOlaDeleteBackupHistoryenabled <Object>] [-ConfigPolicyOlaDeleteBackupHistoryscheduled <Object>]
+ [-ConfigPolicyOlaInstalled <Object>] [-ConfigPolicyOlaOutputFileCleanUp <Object>]
+ [-ConfigPolicyOlaOutputFileCleanupenabled <Object>] [-ConfigPolicyOlaOutputFileCleanupscheduled <Object>]
+ [-ConfigPolicyOlaPurgeJobHistoryCleanUp <Object>] [-ConfigPolicyOlaPurgeJobHistoryenabled <Object>]
+ [-ConfigPolicyOlaPurgeJobHistoryscheduled <Object>] [-ConfigPolicyOlaSystemfullenabled <Object>]
+ [-ConfigPolicyOlaSystemfullretention <Object>] [-ConfigPolicyOlaSystemfullscheduled <Object>]
+ [-ConfigPolicyOlaSystemIntegrityCheckenabled <Object>]
  [-ConfigPolicyOlaSystemIntegrityCheckscheduled <Object>] [-ConfigPolicyOlaUserdiffenabled <Object>]
  [-ConfigPolicyOlaUserdiffretention <Object>] [-ConfigPolicyOlaUserdiffscheduled <Object>]
  [-ConfigPolicyOlaUserfullenabled <Object>] [-ConfigPolicyOlaUserfullretention <Object>]
@@ -80,30 +82,47 @@ Invoke-DbcCheck [-Script <Object[]>] [-TestName <String[]>] [-EnableExit] [[-Che
  [-ConfigPolicyOleautomation <Object>] [-ConfigPolicyPageverify <Object>]
  [-ConfigPolicyRecoverymodelExcludedb <Object>] [-ConfigPolicyRecoverymodelType <Object>]
  [-ConfigPolicySecurityAdhocdistributedqueriesenabled <Object>] [-ConfigPolicySecurityClrenabled <Object>]
- [-ConfigPolicySecurityCrossdbownershipchaining <Object>] [-ConfigPolicySecurityDatabasemailenabled <Object>]
- [-ConfigPolicySecurityLatestbuild <Object>] [-ConfigPolicySecurityOleautomationproceduresdisabled <Object>]
+ [-ConfigPolicySecurityContainedbautoclose <Object>] [-ConfigPolicySecurityCrossdbownershipchaining <Object>]
+ [-ConfigPolicySecurityDatabasemailenabled <Object>] [-ConfigPolicySecurityLatestbuild <Object>]
+ [-ConfigPolicySecurityOleautomationproceduresdisabled <Object>]
  [-ConfigPolicySecurityRemoteaccessdisabled <Object>]
  [-ConfigPolicySecurityScanforstartupproceduresdisabled <Object>]
  [-ConfigPolicySecurityXpcmdshelldisabled <Object>] [-ConfigPolicyServerCpuprioritisation <Object>]
  [-ConfigPolicyServerExcludeDiskAllocationUnit <Object>] [-ConfigPolicyStorageBackuppath <Object>]
- [-ConfigPolicyTraceflagsExpected <Object>] [-ConfigPolicyTraceflagsNotexpected <Object>]
- [-ConfigPolicyTwodigityearcutoff <Object>] [-ConfigPolicyValiddbownerExcludedb <Object>]
- [-ConfigPolicyValiddbownerName <Object>] [-ConfigPolicyWhoisactiveDatabase <Object>]
- [-ConfigPolicyXeventRequiredrunningsession <Object>] [-ConfigPolicyXeventRequiredstoppedsession <Object>]
- [-ConfigPolicyXeventValidrunningsession <Object>] [-ConfigSkipAgentLastjobruntime <Object>]
+ [-ConfigPolicySuspectpagesThreshold <Object>] [-ConfigPolicyTraceflagsExpected <Object>]
+ [-ConfigPolicyTraceflagsNotexpected <Object>] [-ConfigPolicyTwodigityearcutoff <Object>]
+ [-ConfigPolicyValiddbownerExcludedb <Object>] [-ConfigPolicyValiddbownerName <Object>]
+ [-ConfigPolicyWhoisactiveDatabase <Object>] [-ConfigPolicyXeventRequiredrunningsession <Object>]
+ [-ConfigPolicyXeventRequiredstoppedsession <Object>] [-ConfigPolicyXeventValidrunningsession <Object>]
+ [-ConfigSkipAgentAlert <Object>] [-ConfigSkipAgentLastjobruntime <Object>]
  [-ConfigSkipAgentLongrunningjobs <Object>] [-ConfigSkipBackupReadonly <Object>]
- [-ConfigSkipBackupTesting <Object>] [-ConfigSkipConnectionAuth <Object>] [-ConfigSkipConnectionPing <Object>]
+ [-ConfigSkipBackupSecondaries <Object>] [-ConfigSkipBackupTesting <Object>]
+ [-ConfigSkipConnectionAuth <Object>] [-ConfigSkipConnectionPing <Object>]
  [-ConfigSkipConnectionRemoting <Object>] [-ConfigSkipDatabaseFilegrowthdisabled <Object>]
  [-ConfigSkipDatabaseLogfilecounttest <Object>] [-ConfigSkipDatafilegrowthdisabled <Object>]
  [-ConfigSkipDbccDatapuritycheck <Object>] [-ConfigSkipDiffbackuptest <Object>]
- [-ConfigSkipHadrListenerPingcheck <Object>] [-ConfigSkipInstanceDefaulttrace <Object>]
+ [-ConfigSkipHadrListenerPingcheck <Object>] [-ConfigSkipHadrListenerTcpport <Object>]
+ [-ConfigSkipHadrReplicaTcpport <Object>] [-ConfigSkipInstanceDefaulttrace <Object>]
  [-ConfigSkipInstanceLatestbuild <Object>] [-ConfigSkipInstanceModeldbgrowth <Object>]
  [-ConfigSkipInstanceOleautomationproceduresdisabled <Object>]
  [-ConfigSkipInstanceRemoteaccessdisabled <Object>]
- [-ConfigSkipInstanceScanforstartupproceduresdisabled <Object>] [-ConfigSkipLogfilecounttest <Object>]
- [-ConfigSkipLogshiptesting <Object>] [-ConfigSkipTempdb1118 <Object>] [-ConfigSkipTempdbfilecount <Object>]
- [-ConfigSkipTempdbfilegrowthpercent <Object>] [-ConfigSkipTempdbfilesizemax <Object>]
- [-ConfigSkipTempdbfilesonc <Object>] [-ConfigTestingIntegrationInstance <Object>] [<CommonParameters>]
+ [-ConfigSkipInstanceScanforstartupproceduresdisabled <Object>] [-ConfigSkipInstanceSuspectpagelimit <Object>]
+ [-ConfigSkipLogfilecounttest <Object>] [-ConfigSkipLogshiptesting <Object>]
+ [-ConfigSkipSecurityAgentserviceadmin <Object>] [-ConfigSkipSecurityAsymmetrickeysize <Object>]
+ [-ConfigSkipSecurityBuiltinadmin <Object>] [-ConfigSkipSecurityClrassembliessafe <Object>]
+ [-ConfigSkipSecurityContainedbautoclose <Object>] [-ConfigSkipSecurityContainedDBSQLAuth <Object>]
+ [-ConfigSkipSecurityEngineserviceadmin <Object>] [-ConfigSkipSecurityFulltextserviceadmin <Object>]
+ [-ConfigSkipSecurityGuestuserconnect <Object>] [-ConfigSkipSecurityHideinstance <Object>]
+ [-ConfigSkipSecurityLocalwindowsgroup <Object>] [-ConfigSkipSecurityLoginauditlevelfailed <Object>]
+ [-ConfigSkipSecurityLoginauditlevelsuccessful <Object>] [-ConfigSkipSecurityLoginCheckPolicy <Object>]
+ [-ConfigSkipSecurityLoginMustChange <Object>] [-ConfigSkipSecurityLoginPasswordExpiration <Object>]
+ [-ConfigSkipSecurityNonstandardport <Object>] [-ConfigSkipSecurityPublicrolepermission <Object>]
+ [-ConfigSkipSecuritySadisabled <Object>] [-ConfigSkipSecuritySaexist <Object>]
+ [-ConfigSkipSecuritySqlagentproxiesnopublicrole <Object>]
+ [-ConfigSkipSecuritySymmetrickeyencryptionlevel <Object>] [-ConfigSkipTempdb1118 <Object>]
+ [-ConfigSkipTempdbfilecount <Object>] [-ConfigSkipTempdbfilegrowthpercent <Object>]
+ [-ConfigSkipTempdbfilesizemax <Object>] [-ConfigSkipTempdbfilesonc <Object>]
+ [-ConfigTestingIntegrationInstance <Object>] [<CommonParameters>]
 ```
 
 ### NewOutputSet
@@ -125,8 +144,9 @@ Invoke-DbcCheck [-Script <Object[]>] [-TestName <String[]>] [-EnableExit] [[-Che
  [-ConfigAppComputername <Object>] [-ConfigAppLocalapp <Object>] [-ConfigAppMaildirectory <Object>]
  [-ConfigAppSqlcredential <Object>] [-ConfigAppSqlinstance <Object>] [-ConfigAppWincredential <Object>]
  [-ConfigCommandInvokedbccheckExcludecheck <Object>] [-ConfigCommandInvokedbccheckExcludedatabases <Object>]
- [-ConfigDatabaseExists <Object>] [-ConfigDomainDomaincontroller <Object>] [-ConfigDomainName <Object>]
- [-ConfigDomainOrganizationalunit <Object>] [-ConfigGlobalNotcontactable <Object>]
+ [-ConfigDatabaseExists <Object>] [-ConfigDatabaseQuerystoredisabledExcludedb <Object>]
+ [-ConfigDatabaseQuerystoreenabledExcludedb <Object>] [-ConfigDomainDomaincontroller <Object>]
+ [-ConfigDomainName <Object>] [-ConfigDomainOrganizationalunit <Object>] [-ConfigGlobalNotcontactable <Object>]
  [-ConfigMailFailurethreshhold <Object>] [-ConfigMailFrom <Object>] [-ConfigMailSmtpserver <Object>]
  [-ConfigMailSubject <Object>] [-ConfigMailTo <Object>] [-ConfigOlaJobNameCommandLogCleanup <Object>]
  [-ConfigOlaJobNameDeleteBackupHistory <Object>] [-ConfigOlaJobNameOutputFileCleanup <Object>]
@@ -157,20 +177,21 @@ Invoke-DbcCheck [-Script <Object[]>] [-TestName <String[]>] [-EnableExit] [[-Che
  [-ConfigPolicyDatabaseWrongcollation <Object>] [-ConfigPolicyDbccMaxdays <Object>]
  [-ConfigPolicyDiskspacePercentfree <Object>] [-ConfigPolicyDumpMaxcount <Object>]
  [-ConfigPolicyErrorlogLogcount <Object>] [-ConfigPolicyErrorlogWarningwindow <Object>]
- [-ConfigPolicyHadrTcpport <Object>] [-ConfigPolicyIdentityUsagepercent <Object>]
- [-ConfigPolicyInstanceSqlenginestart <Object>] [-ConfigPolicyInstanceSqlenginestate <Object>]
- [-ConfigPolicyInstancemaxdopExcludeinstance <Object>] [-ConfigPolicyInstancemaxdopMaxdop <Object>]
- [-ConfigPolicyInstancemaxdopUserecommended <Object>] [-ConfigPolicyInvaliddbownerExcludedb <Object>]
- [-ConfigPolicyInvaliddbownerName <Object>] [-ConfigPolicyNetworkLatencymaxms <Object>]
- [-ConfigPolicyOlaCommandLogCleanUp <Object>] [-ConfigPolicyOlaCommandLogenabled <Object>]
- [-ConfigPolicyOlaCommandLogscheduled <Object>] [-ConfigPolicyOlaDatabase <Object>]
- [-ConfigPolicyOlaDeleteBackupHistoryCleanUp <Object>] [-ConfigPolicyOlaDeleteBackupHistoryenabled <Object>]
- [-ConfigPolicyOlaDeleteBackupHistoryscheduled <Object>] [-ConfigPolicyOlaInstalled <Object>]
- [-ConfigPolicyOlaOutputFileCleanUp <Object>] [-ConfigPolicyOlaOutputFileCleanupenabled <Object>]
- [-ConfigPolicyOlaOutputFileCleanupscheduled <Object>] [-ConfigPolicyOlaPurgeJobHistoryCleanUp <Object>]
- [-ConfigPolicyOlaPurgeJobHistoryenabled <Object>] [-ConfigPolicyOlaPurgeJobHistoryscheduled <Object>]
- [-ConfigPolicyOlaSystemfullenabled <Object>] [-ConfigPolicyOlaSystemfullretention <Object>]
- [-ConfigPolicyOlaSystemfullscheduled <Object>] [-ConfigPolicyOlaSystemIntegrityCheckenabled <Object>]
+ [-ConfigPolicyHadrAgtcpport <Object>] [-ConfigPolicyHadrTcpport <Object>]
+ [-ConfigPolicyIdentityUsagepercent <Object>] [-ConfigPolicyInstanceSqlenginestart <Object>]
+ [-ConfigPolicyInstanceSqlenginestate <Object>] [-ConfigPolicyInstancemaxdopExcludeinstance <Object>]
+ [-ConfigPolicyInstancemaxdopMaxdop <Object>] [-ConfigPolicyInstancemaxdopUserecommended <Object>]
+ [-ConfigPolicyInvaliddbownerExcludedb <Object>] [-ConfigPolicyInvaliddbownerName <Object>]
+ [-ConfigPolicyNetworkLatencymaxms <Object>] [-ConfigPolicyOlaCommandLogCleanUp <Object>]
+ [-ConfigPolicyOlaCommandLogenabled <Object>] [-ConfigPolicyOlaCommandLogscheduled <Object>]
+ [-ConfigPolicyOlaDatabase <Object>] [-ConfigPolicyOlaDeleteBackupHistoryCleanUp <Object>]
+ [-ConfigPolicyOlaDeleteBackupHistoryenabled <Object>] [-ConfigPolicyOlaDeleteBackupHistoryscheduled <Object>]
+ [-ConfigPolicyOlaInstalled <Object>] [-ConfigPolicyOlaOutputFileCleanUp <Object>]
+ [-ConfigPolicyOlaOutputFileCleanupenabled <Object>] [-ConfigPolicyOlaOutputFileCleanupscheduled <Object>]
+ [-ConfigPolicyOlaPurgeJobHistoryCleanUp <Object>] [-ConfigPolicyOlaPurgeJobHistoryenabled <Object>]
+ [-ConfigPolicyOlaPurgeJobHistoryscheduled <Object>] [-ConfigPolicyOlaSystemfullenabled <Object>]
+ [-ConfigPolicyOlaSystemfullretention <Object>] [-ConfigPolicyOlaSystemfullscheduled <Object>]
+ [-ConfigPolicyOlaSystemIntegrityCheckenabled <Object>]
  [-ConfigPolicyOlaSystemIntegrityCheckscheduled <Object>] [-ConfigPolicyOlaUserdiffenabled <Object>]
  [-ConfigPolicyOlaUserdiffretention <Object>] [-ConfigPolicyOlaUserdiffscheduled <Object>]
  [-ConfigPolicyOlaUserfullenabled <Object>] [-ConfigPolicyOlaUserfullretention <Object>]
@@ -181,30 +202,47 @@ Invoke-DbcCheck [-Script <Object[]>] [-TestName <String[]>] [-EnableExit] [[-Che
  [-ConfigPolicyOleautomation <Object>] [-ConfigPolicyPageverify <Object>]
  [-ConfigPolicyRecoverymodelExcludedb <Object>] [-ConfigPolicyRecoverymodelType <Object>]
  [-ConfigPolicySecurityAdhocdistributedqueriesenabled <Object>] [-ConfigPolicySecurityClrenabled <Object>]
- [-ConfigPolicySecurityCrossdbownershipchaining <Object>] [-ConfigPolicySecurityDatabasemailenabled <Object>]
- [-ConfigPolicySecurityLatestbuild <Object>] [-ConfigPolicySecurityOleautomationproceduresdisabled <Object>]
+ [-ConfigPolicySecurityContainedbautoclose <Object>] [-ConfigPolicySecurityCrossdbownershipchaining <Object>]
+ [-ConfigPolicySecurityDatabasemailenabled <Object>] [-ConfigPolicySecurityLatestbuild <Object>]
+ [-ConfigPolicySecurityOleautomationproceduresdisabled <Object>]
  [-ConfigPolicySecurityRemoteaccessdisabled <Object>]
  [-ConfigPolicySecurityScanforstartupproceduresdisabled <Object>]
  [-ConfigPolicySecurityXpcmdshelldisabled <Object>] [-ConfigPolicyServerCpuprioritisation <Object>]
  [-ConfigPolicyServerExcludeDiskAllocationUnit <Object>] [-ConfigPolicyStorageBackuppath <Object>]
- [-ConfigPolicyTraceflagsExpected <Object>] [-ConfigPolicyTraceflagsNotexpected <Object>]
- [-ConfigPolicyTwodigityearcutoff <Object>] [-ConfigPolicyValiddbownerExcludedb <Object>]
- [-ConfigPolicyValiddbownerName <Object>] [-ConfigPolicyWhoisactiveDatabase <Object>]
- [-ConfigPolicyXeventRequiredrunningsession <Object>] [-ConfigPolicyXeventRequiredstoppedsession <Object>]
- [-ConfigPolicyXeventValidrunningsession <Object>] [-ConfigSkipAgentLastjobruntime <Object>]
+ [-ConfigPolicySuspectpagesThreshold <Object>] [-ConfigPolicyTraceflagsExpected <Object>]
+ [-ConfigPolicyTraceflagsNotexpected <Object>] [-ConfigPolicyTwodigityearcutoff <Object>]
+ [-ConfigPolicyValiddbownerExcludedb <Object>] [-ConfigPolicyValiddbownerName <Object>]
+ [-ConfigPolicyWhoisactiveDatabase <Object>] [-ConfigPolicyXeventRequiredrunningsession <Object>]
+ [-ConfigPolicyXeventRequiredstoppedsession <Object>] [-ConfigPolicyXeventValidrunningsession <Object>]
+ [-ConfigSkipAgentAlert <Object>] [-ConfigSkipAgentLastjobruntime <Object>]
  [-ConfigSkipAgentLongrunningjobs <Object>] [-ConfigSkipBackupReadonly <Object>]
- [-ConfigSkipBackupTesting <Object>] [-ConfigSkipConnectionAuth <Object>] [-ConfigSkipConnectionPing <Object>]
+ [-ConfigSkipBackupSecondaries <Object>] [-ConfigSkipBackupTesting <Object>]
+ [-ConfigSkipConnectionAuth <Object>] [-ConfigSkipConnectionPing <Object>]
  [-ConfigSkipConnectionRemoting <Object>] [-ConfigSkipDatabaseFilegrowthdisabled <Object>]
  [-ConfigSkipDatabaseLogfilecounttest <Object>] [-ConfigSkipDatafilegrowthdisabled <Object>]
  [-ConfigSkipDbccDatapuritycheck <Object>] [-ConfigSkipDiffbackuptest <Object>]
- [-ConfigSkipHadrListenerPingcheck <Object>] [-ConfigSkipInstanceDefaulttrace <Object>]
+ [-ConfigSkipHadrListenerPingcheck <Object>] [-ConfigSkipHadrListenerTcpport <Object>]
+ [-ConfigSkipHadrReplicaTcpport <Object>] [-ConfigSkipInstanceDefaulttrace <Object>]
  [-ConfigSkipInstanceLatestbuild <Object>] [-ConfigSkipInstanceModeldbgrowth <Object>]
  [-ConfigSkipInstanceOleautomationproceduresdisabled <Object>]
  [-ConfigSkipInstanceRemoteaccessdisabled <Object>]
- [-ConfigSkipInstanceScanforstartupproceduresdisabled <Object>] [-ConfigSkipLogfilecounttest <Object>]
- [-ConfigSkipLogshiptesting <Object>] [-ConfigSkipTempdb1118 <Object>] [-ConfigSkipTempdbfilecount <Object>]
- [-ConfigSkipTempdbfilegrowthpercent <Object>] [-ConfigSkipTempdbfilesizemax <Object>]
- [-ConfigSkipTempdbfilesonc <Object>] [-ConfigTestingIntegrationInstance <Object>] [<CommonParameters>]
+ [-ConfigSkipInstanceScanforstartupproceduresdisabled <Object>] [-ConfigSkipInstanceSuspectpagelimit <Object>]
+ [-ConfigSkipLogfilecounttest <Object>] [-ConfigSkipLogshiptesting <Object>]
+ [-ConfigSkipSecurityAgentserviceadmin <Object>] [-ConfigSkipSecurityAsymmetrickeysize <Object>]
+ [-ConfigSkipSecurityBuiltinadmin <Object>] [-ConfigSkipSecurityClrassembliessafe <Object>]
+ [-ConfigSkipSecurityContainedbautoclose <Object>] [-ConfigSkipSecurityContainedDBSQLAuth <Object>]
+ [-ConfigSkipSecurityEngineserviceadmin <Object>] [-ConfigSkipSecurityFulltextserviceadmin <Object>]
+ [-ConfigSkipSecurityGuestuserconnect <Object>] [-ConfigSkipSecurityHideinstance <Object>]
+ [-ConfigSkipSecurityLocalwindowsgroup <Object>] [-ConfigSkipSecurityLoginauditlevelfailed <Object>]
+ [-ConfigSkipSecurityLoginauditlevelsuccessful <Object>] [-ConfigSkipSecurityLoginCheckPolicy <Object>]
+ [-ConfigSkipSecurityLoginMustChange <Object>] [-ConfigSkipSecurityLoginPasswordExpiration <Object>]
+ [-ConfigSkipSecurityNonstandardport <Object>] [-ConfigSkipSecurityPublicrolepermission <Object>]
+ [-ConfigSkipSecuritySadisabled <Object>] [-ConfigSkipSecuritySaexist <Object>]
+ [-ConfigSkipSecuritySqlagentproxiesnopublicrole <Object>]
+ [-ConfigSkipSecuritySymmetrickeyencryptionlevel <Object>] [-ConfigSkipTempdb1118 <Object>]
+ [-ConfigSkipTempdbfilecount <Object>] [-ConfigSkipTempdbfilegrowthpercent <Object>]
+ [-ConfigSkipTempdbfilesizemax <Object>] [-ConfigSkipTempdbfilesonc <Object>]
+ [-ConfigTestingIntegrationInstance <Object>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -226,7 +264,7 @@ Runs all of the checks tagged Backup against the sql2016 instance
 Invoke-DbcCheck -Tag RecoveryModel -SqlInstance sql2017, sqlcluster -SqlCredential (Get-Credential sqladmin)
 ```
 
-Runs the Recovery model check against the SQL instances sql2017, sqlcluster 
+Runs the Recovery model check against the SQL instances sql2017, sqlcluster
 using the sqladmin SQL login with the password provided interactively
 
 ### EXAMPLE 3
@@ -234,7 +272,7 @@ using the sqladmin SQL login with the password provided interactively
 Invoke-DbcCheck -Check Database -ExcludeCheck AutoShrink -ConfigFile \\share\repo\prod.json
 ```
 
-Runs all of the checks tagged Database except for the AutoShrink check against 
+Runs all of the checks tagged Database except for the AutoShrink check against
 the SQL Instances set in the config under app.sqlinstance
 
 Imports configuration file, \\\\share\repo\prod.json, prior to executing checks.
@@ -263,7 +301,7 @@ Invoke-DbcCheck -SqlInstance sql2017 -Tags SuspectPage, LastBackup -Show Summary
 
 Start-DbcPowerBi
 
-Runs the Suspect Page and Last Backup checks against the SQL Instances set in 
+Runs the Suspect Page and Last Backup checks against the SQL Instances set in
 the config under app.sqlinstance only showing the summary of the results of the
 checks.
 It then updates the source json for the XML which is stored at
@@ -658,9 +696,9 @@ Accept wildcard characters: False
 ```
 
 ### -Show
-Customizes the output Pester writes to the screen. 
+Customizes the output Pester writes to the screen.
 
-Available options are 
+Available options are
 None
 Default
 Passed
@@ -1077,6 +1115,36 @@ Accept wildcard characters: False
 
 ### -ConfigDatabaseExists
 {{ Fill ConfigDatabaseExists Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigDatabaseQuerystoredisabledExcludedb
+{{ Fill ConfigDatabaseQuerystoredisabledExcludedb Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigDatabaseQuerystoreenabledExcludedb
+{{ Fill ConfigDatabaseQuerystoreenabledExcludedb Description }}
 
 ```yaml
 Type: Object
@@ -2035,6 +2103,21 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -ConfigPolicyHadrAgtcpport
+{{ Fill ConfigPolicyHadrAgtcpport Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -ConfigPolicyHadrTcpport
 {{ Fill ConfigPolicyHadrTcpport Description }}
 
@@ -2755,6 +2838,21 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -ConfigPolicySecurityContainedbautoclose
+{{ Fill ConfigPolicySecurityContainedbautoclose Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -ConfigPolicySecurityCrossdbownershipchaining
 {{ Fill ConfigPolicySecurityCrossdbownershipchaining Description }}
 
@@ -2905,6 +3003,21 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -ConfigPolicySuspectpagesThreshold
+{{ Fill ConfigPolicySuspectpagesThreshold Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -ConfigPolicyTraceflagsExpected
 {{ Fill ConfigPolicyTraceflagsExpected Description }}
 
@@ -3040,6 +3153,21 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -ConfigSkipAgentAlert
+{{ Fill ConfigSkipAgentAlert Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -ConfigSkipAgentLastjobruntime
 {{ Fill ConfigSkipAgentLastjobruntime Description }}
 
@@ -3072,6 +3200,21 @@ Accept wildcard characters: False
 
 ### -ConfigSkipBackupReadonly
 {{ Fill ConfigSkipBackupReadonly Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipBackupSecondaries
+{{ Fill ConfigSkipBackupSecondaries Description }}
 
 ```yaml
 Type: Object
@@ -3235,6 +3378,36 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -ConfigSkipHadrListenerTcpport
+{{ Fill ConfigSkipHadrListenerTcpport Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipHadrReplicaTcpport
+{{ Fill ConfigSkipHadrReplicaTcpport Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -ConfigSkipInstanceDefaulttrace
 {{ Fill ConfigSkipInstanceDefaulttrace Description }}
 
@@ -3325,6 +3498,21 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -ConfigSkipInstanceSuspectpagelimit
+{{ Fill ConfigSkipInstanceSuspectpagelimit Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -ConfigSkipLogfilecounttest
 {{ Fill ConfigSkipLogfilecounttest Description }}
 
@@ -3342,6 +3530,336 @@ Accept wildcard characters: False
 
 ### -ConfigSkipLogshiptesting
 {{ Fill ConfigSkipLogshiptesting Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityAgentserviceadmin
+{{ Fill ConfigSkipSecurityAgentserviceadmin Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityAsymmetrickeysize
+{{ Fill ConfigSkipSecurityAsymmetrickeysize Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityBuiltinadmin
+{{ Fill ConfigSkipSecurityBuiltinadmin Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityClrassembliessafe
+{{ Fill ConfigSkipSecurityClrassembliessafe Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityContainedbautoclose
+{{ Fill ConfigSkipSecurityContainedbautoclose Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityContainedDBSQLAuth
+{{ Fill ConfigSkipSecurityContainedDBSQLAuth Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityEngineserviceadmin
+{{ Fill ConfigSkipSecurityEngineserviceadmin Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityFulltextserviceadmin
+{{ Fill ConfigSkipSecurityFulltextserviceadmin Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityGuestuserconnect
+{{ Fill ConfigSkipSecurityGuestuserconnect Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityHideinstance
+{{ Fill ConfigSkipSecurityHideinstance Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityLocalwindowsgroup
+{{ Fill ConfigSkipSecurityLocalwindowsgroup Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityLoginauditlevelfailed
+{{ Fill ConfigSkipSecurityLoginauditlevelfailed Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityLoginauditlevelsuccessful
+{{ Fill ConfigSkipSecurityLoginauditlevelsuccessful Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityLoginCheckPolicy
+{{ Fill ConfigSkipSecurityLoginCheckPolicy Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityLoginMustChange
+{{ Fill ConfigSkipSecurityLoginMustChange Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityLoginPasswordExpiration
+{{ Fill ConfigSkipSecurityLoginPasswordExpiration Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityNonstandardport
+{{ Fill ConfigSkipSecurityNonstandardport Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecurityPublicrolepermission
+{{ Fill ConfigSkipSecurityPublicrolepermission Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecuritySadisabled
+{{ Fill ConfigSkipSecuritySadisabled Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecuritySaexist
+{{ Fill ConfigSkipSecuritySaexist Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecuritySqlagentproxiesnopublicrole
+{{ Fill ConfigSkipSecuritySqlagentproxiesnopublicrole Description }}
+
+```yaml
+Type: Object
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ConfigSkipSecuritySymmetrickeyencryptionlevel
+{{ Fill ConfigSkipSecuritySymmetrickeyencryptionlevel Description }}
 
 ```yaml
 Type: Object

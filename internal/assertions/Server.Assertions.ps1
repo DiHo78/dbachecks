@@ -7,7 +7,7 @@ It starts with the Get-AllServerInfo which uses all of the unique
  tags that have been passed and gathers the required information
  which can then be used for the assertions.
 
- The long term aim is to make Get-AllServerInfo as performant as 
+ The long term aim is to make Get-AllServerInfo as performant as
  possible
 #>
 function Get-AllServerInfo {
@@ -17,7 +17,7 @@ function Get-AllServerInfo {
     Param($ComputerName, $Tags)
     $There = $true
     switch ($tags) {
-        'PingComputer' { 
+        'PingComputer' {
             if ($There) {
                 try {
                     $pingcount = Get-DbcConfigValue policy.connection.pingcount
@@ -28,17 +28,17 @@ function Get-AllServerInfo {
                     $PingComputer = [PSCustomObject] @{
                         Count        = -1
                         ResponseTime = 50000000
-                    } 
+                    }
                 }
             }
             else {
                 $PingComputer = [PSCustomObject] @{
                     Count        = -1
                     ResponseTime = 50000000
-                } 
+                }
             }
         }
-        'DiskAllocationUnit' { 
+        'DiskAllocationUnit' {
             if ($There) {
                 try {
                     $DiskAllocation = Test-DbaDiskAllocation -ComputerName $ComputerName -EnableException -WarningAction SilentlyContinue -WarningVariable DiskAllocationWarning
@@ -49,7 +49,7 @@ function Get-AllServerInfo {
                         Name           = '? '
                         isbestpractice = $false
                         IsSqlDisk      = $true
-                    } 
+                    }
                 }
             }
             else {
@@ -57,10 +57,10 @@ function Get-AllServerInfo {
                     Name           = '? '
                     isbestpractice = $false
                     IsSqlDisk      = $true
-                } 
+                }
             }
         }
-        'PowerPlan' { 
+        'PowerPlan' {
             if ($There) {
                 try {
                     $PowerPlan = (Test-DbaPowerPlan -ComputerName $ComputerName -EnableException -WarningVariable PowerWarning -WarningAction SilentlyContinue).IsBestPractice
@@ -119,7 +119,7 @@ function Get-AllServerInfo {
                 }
             }
         }
-        'DiskCapacity' { 
+        'DiskCapacity' {
             if ($There) {
                 try {
                     $DiskSpace = Get-DbaDiskSpace -ComputerName $ComputerName -EnableException -WarningVariable DiskSpaceWarning -WarningAction SilentlyContinue
@@ -132,7 +132,7 @@ function Get-AllServerInfo {
                                 Name         = 'Do not know the Name'
                                 PercentFree  = -1
                                 ComputerName = 'Cannot resolve ' + $ComputerName
-                            } 
+                            }
                         }
                     }
                     else {
@@ -140,7 +140,7 @@ function Get-AllServerInfo {
                             Name         = 'Do not know the Name'
                             PercentFree  = -1
                             ComputerName = 'An Error occurred ' + $ComputerName
-                        } 
+                        }
                     }
                 }
             }
@@ -149,7 +149,29 @@ function Get-AllServerInfo {
                     Name         = 'Do not know the Name'
                     PercentFree  = -1
                     ComputerName = 'An Error occurred ' + $ComputerName
-                } 
+                }
+            }
+        }
+        'NonStandardPort' {
+            if ($There) {
+                try {
+                    $count = (Find-DbaInstance -ComputerName $ComputerName -TCPPort 1433).Count
+                    $StandardPortCount = [pscustomobject] @{
+                        Count = $count
+                    }
+                }
+                catch {
+                    $There = $false
+                    $StandardPortCount = [pscustomobject] @{
+                        Count = 'We Could not Connect to $Instance'
+                    }
+                }
+            }
+            else {
+                $There = $false
+                $StandardPortCount = [pscustomobject] @{
+                    Count = 'We Could not Connect to $Instance'
+                }
             }
         }
         Default {}
@@ -159,7 +181,8 @@ function Get-AllServerInfo {
         SPNs           = $SPNs
         DiskSpace      = $DiskSpace
         PingComputer   = $PingComputer
-        DiskAllocation = $DiskAllocation 
+        DiskAllocation = $DiskAllocation
+        StandardPortCount = $StandardPortCount
     }
 }
 
@@ -183,7 +206,7 @@ function Assert-DiskAllocationUnit {
 
 function Assert-PowerPlan {
     Param($AllServerInfo)
-    $AllServerInfo.PowerPlan | Should -Be 'True' -Because "You want your SQL Server to not be throttled by the Power Plan settings - See https://support.microsoft.com/en-us/help/2207548/slow-performance-on-windows-server-when-using-the-balanced-power-plan"   
+    $AllServerInfo.PowerPlan | Should -Be 'True' -Because "You want your SQL Server to not be throttled by the Power Plan settings - See https://support.microsoft.com/en-us/help/2207548/slow-performance-on-windows-server-when-using-the-balanced-power-plan"
 }
 
 function Assert-SPN {
@@ -205,14 +228,19 @@ function Assert-Ping {
     $pingcount = Get-DbcConfigValue policy.connection.pingcount
     $pingmsmax = Get-DbcConfigValue policy.connection.pingmaxms
     switch ($type) {
-        Ping { 
-            $AllServerInfo.PingComputer.Count | Should -Be $pingcount -Because "We expect the server to respond to ping"
+        Ping {
+            ($AllServerInfo.PingComputer).Count | Should -Be $pingcount -Because "We expect the server to respond to ping"
         }
         Average {
-            ($AllServerInfo.PingComputer | Measure-Object -Property ResponseTime -Average).Average / $pingcount | Should -BeLessThan $pingmsmax -Because "We expect the server to respond within $pingmsmax"
+            ($AllServerInfo.PingComputer | Measure-Object -Property Latency -Average).Average / $pingcount | Should -BeLessThan $pingmsmax -Because "We expect the server to respond within $pingmsmax"
         }
         Default {}
     }
+}
+
+function Assert-NonStandardPort {
+    Param($AllServerInfo)
+    $AllServerInfo.StandardPortCount.count | Should -Be 0 -Because "SQL Server should be configured to not use the standard port of 1433"
 }
 # SIG # Begin signature block
 # MIINEAYJKoZIhvcNAQcCoIINATCCDP0CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB

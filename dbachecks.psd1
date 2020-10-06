@@ -11,7 +11,7 @@
     RootModule             = 'dbachecks.psm1'
 
     # Version number of this module.
-    ModuleVersion          = '1.2.21'
+    ModuleVersion          = '2.0.4'
 
     # ID used to uniquely identify this module
     GUID                   = '578c5d98-50c8-43a8-bdbb-d7159028d7ac'
@@ -23,13 +23,16 @@
     CompanyName            = 'SQL Community Collaborative'
 
     # Copyright statement for this module
-    Copyright              = '(c) 2018. All rights reserved.'
+    Copyright              = '(c) 2020. All rights reserved.'
 
     # Description of the functionality provided by this module
     Description            = 'SQL Server Infrastructure validation Tests to ensure that your SQL Server estate is and continues to be compliant with your requirements'
 
     # Minimum version of the Windows PowerShell engine required by this module
-    PowerShellVersion      = '5.0'
+    PowerShellVersion      = '5.1'
+
+    # Supported PSEditions
+    CompatiblePSEditions = 'Desktop', 'Core' # Cant put this in until a decision is made to make minimum version 5.1 :-(
 
     # Name of the Windows PowerShell host required by this module
     PowerShellHostName     = ''
@@ -48,9 +51,8 @@
 
     # Modules that must be imported into the global environment prior to importing this module
     RequiredModules        = @(
-        @{ ModuleName = 'Pester'; ModuleVersion = '4.7.1' },
-        @{ ModuleName = 'dbatools'; ModuleVersion = '1.0.23' }
-        @{ ModuleName = 'PSFramework'; ModuleVersion = '1.0.0' }
+        @{ ModuleName = 'dbatools'; ModuleVersion = '1.0.103' }
+        @{ ModuleName = 'PSFramework'; ModuleVersion = '1.1.59' }
     )
 
     # Assemblies that must be loaded prior to importing this module
@@ -89,18 +91,21 @@
         # 'Send-DbcMailMessage',
         'Clear-DbcPowerBiDataSource',
         'Save-DbcRequiredModules',
-        'Update-DbcRequiredModules'
+        'Update-DbcRequiredModules',
+        'Set-DbcFile',
+        'Convert-DbcResult',
+        'Write-DbcTable'
     )
 
     # Cmdlets to export from this module
-    CmdletsToExport        = '*'
+    CmdletsToExport        = @()
 
     # Variables to export from this module
     VariablesToExport      = '*'
 
     # Aliases to export from this module
     # Aliases are stored in dbachecks.psm1
-    AliasesToExport        = 'Update-Dbchecks'
+    AliasesToExport        = 'Update-Dbachecks'
 
     # List of all modules packaged with this module
     ModuleList             = @()
@@ -131,12 +136,10 @@
 
             # Release notes for this particular version of the module
             ReleaseNotes = "
-## Date 28th November
-Thank you Tracey tboggiano
-    Added new CIS Check for the latest SQL build #716
-    
-Thank you Rob
-    Making the SQL Engine Service Check configurable #706
+## Date September 22nd 2020
+
+Only Importing Pester v4 and lower to reduce Pester v5 errors
+
 ##Latest
 
 Run Get-DbcReleaseNotes for all release notes

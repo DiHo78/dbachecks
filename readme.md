@@ -13,6 +13,22 @@ This open source module allows us to crowd-source our checklists using [Pester](
 * Disk space is not about to run out
 * All enabled jobs have succeeded
 
+## Interactive dbachecks PowerShell Notebooks for Azure Data Studio 
+
+You can find a set of interactive PowerShell Notebooks which will introduce you to all of the core concepts in Robs GitHub. There is a set of .NET interactive Jupyter Notebooks 
+
+https://github.com/SQLDBAWithABeard/JupyterNotebooks/tree/master/notebooks/dotNETNotebooks/dbachecks
+
+and a set of Jupyter Notebooks that will run in Azure Data Studio
+
+https://github.com/SQLDBAWithABeard/JupyterNotebooks/tree/master/notebooks/NotDotNet/dbachecks  
+
+Both will use a docker container to show you how dbachecks works.
+
+There is a zip file containing the Notebooks here
+
+https://github.com/SQLDBAWithABeard/Presentations/raw/master/Notebooks/dbachecks/Notebooks.zip
+
 Have questions about development? Please visit our [Wiki](https://github.com/sqlcollaborative/dbachecks/wiki). **Anyone developing this module** should visit that Wiki page (after fully reading this readme) for a brief overview.
 
 ## Build Status
@@ -37,7 +53,7 @@ Want to know how our CD process works? Read this [blog post](https://sqldbawitha
 
 ## Prerequisites
 ### Client requirements
-* PowerShell 4+ is required.
+* PowerShell 5 + is required.
 * Automatic installation of the dependent modules will only be provided via the [PowerShell Gallery](https://www.powershellgallery.com).
 
 When you install from the Gallery, it'll auto-install:
@@ -278,3 +294,7 @@ Know of any more blog posts about dbachecks? - Please add them here.
 ## Party
 
 Nice work!
+
+# How to Contribute
+
+We welcome contributions to the project. You can fork the repository, make changes and create a Pull Request. [Rob has written a guide here](https://sqldbawithabeard.com/?p=11030)
